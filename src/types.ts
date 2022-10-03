@@ -1,7 +1,7 @@
 import type {
   OrderStruct,
-  BasicOrderParametersStruct,
-  Seaport as TypeChainSeaportContract,
+  Seaport as TypeChainSeaportContract
+  
 } from "./typechain/Seaport";
 import {
   BigNumber,
@@ -37,7 +37,7 @@ export type SeaportConfig = {
 
 export type EncodedData = {
   value: string;
-  data: BasicOrderParametersStruct
+  data: any
 }
 
 type TypedDataDomain = {

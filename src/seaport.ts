@@ -37,7 +37,7 @@ import type {
   MatchOrdersFulfillment,
   SeaportContract,
   Signer,
-  EncodedData,
+  EncodedData
 } from "./types";
 import { getApprovalActions } from "./utils/approval";
 import {

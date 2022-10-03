@@ -181,7 +181,7 @@ const offerAndConsiderationFulfillmentMapping: {
 
 export async function fulfillBasicOrder({
   order,
-  seaportContract,
+  // seaportContract,
   offererBalancesAndApprovals,
   fulfillerBalancesAndApprovals,
   timeBasedItemParams,
@@ -190,7 +190,7 @@ export async function fulfillBasicOrder({
   signer,
   tips = [],
   conduitKey = NO_CONDUIT,
-  domain,
+  // domain,
 }: {
   order: Order;
   seaportContract: Seaport;
@@ -284,7 +284,7 @@ export async function fulfillBasicOrder({
   };
 
   const payableOverrides = { value: totalNativeAmount };
-  
+
   const approvalActions = await getApprovalActions(
     insufficientApprovals,
     signer

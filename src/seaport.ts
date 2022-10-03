@@ -37,6 +37,7 @@ import type {
   MatchOrdersFulfillment,
   SeaportContract,
   Signer,
+  EncodedData,
 } from "./types";
 import { getApprovalActions } from "./utils/approval";
 import {
@@ -660,7 +661,7 @@ export class Seaport {
           "fulfillBasicOrder" | "fulfillOrder" | "fulfillAdvancedOrder"
         >
       >
-    >
+    > | EncodedData
   > {
     const { parameters: orderParameters } = order;
     const { offerer, offer, consideration } = orderParameters;

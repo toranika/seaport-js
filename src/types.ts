@@ -1,5 +1,6 @@
 import type {
   OrderStruct,
+  BasicOrderParametersStruct
   Seaport as TypeChainSeaportContract,
 } from "./typechain/Seaport";
 import {
@@ -33,6 +34,11 @@ export type SeaportConfig = {
     defaultConduitKey?: string;
   };
 };
+
+export type EncodedData = {
+  value: string;
+  data: BasicOrderParametersStruct
+}
 
 type TypedDataDomain = {
   name?: string;

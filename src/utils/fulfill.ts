@@ -23,6 +23,7 @@ import type {
   OrderStatus,
   OrderUseCase,
   ContractMethodReturnType,
+  EncodedData,
 } from "../types";
 import { getApprovalActions } from "./approval";
 import {
@@ -207,7 +208,7 @@ export async function fulfillBasicOrder({
     ExchangeAction<
       ContractMethodReturnType<SeaportContract, "fulfillBasicOrder">
     >
-  >
+  > | EncodedData
 > {
   const { offer, consideration } = order.parameters;
   const considerationIncludingTips = [...consideration, ...tips];
@@ -283,29 +284,34 @@ export async function fulfillBasicOrder({
   };
 
   const payableOverrides = { value: totalNativeAmount };
-
+  
   const approvalActions = await getApprovalActions(
     insufficientApprovals,
     signer
   );
 
-  const exchangeAction = {
-    type: "exchange",
-    transactionMethods: getTransactionMethods(
-      seaportContract.connect(signer),
-      "fulfillBasicOrder",
-      [basicOrderParameters, payableOverrides],
-      domain
-    ),
-  } as const;
-
-  const actions = [...approvalActions, exchangeAction] as const;
-
   return {
-    actions,
-    executeAllActions: () =>
-      executeAllActions(actions) as Promise<ContractTransaction>,
-  };
+    value:totalNativeAmount,
+    data: basicOrderParameters
+  }
+
+  // const exchangeAction = {
+  //   type: "exchange",
+  //   transactionMethods: getTransactionMethods(
+  //     seaportContract.connect(signer),
+  //     "fulfillBasicOrder",
+  //     [basicOrderParameters, payableOverrides],
+  //     domain
+  //   ),
+  // } as const;
+
+  // const actions = [...approvalActions, exchangeAction] as const;
+
+  // return {
+  //   actions,
+  //   executeAllActions: () =>
+  //     executeAllActions(actions) as Promise<ContractTransaction>,
+  // };
 }
 
 export async function fulfillStandardOrder({

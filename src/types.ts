@@ -1,6 +1,6 @@
 import type {
   OrderStruct,
-  BasicOrderParametersStruct
+  BasicOrderParametersStruct,
   Seaport as TypeChainSeaportContract,
 } from "./typechain/Seaport";
 import {

@@ -1,7 +1,6 @@
 import type {
   OrderStruct,
-  Seaport as TypeChainSeaportContract
-  
+  Seaport as TypeChainSeaportContract,
 } from "./typechain/Seaport";
 import {
   BigNumber,
@@ -34,11 +33,6 @@ export type SeaportConfig = {
     defaultConduitKey?: string;
   };
 };
-
-export type EncodedData = {
-  value: string;
-  data: any
-}
 
 type TypedDataDomain = {
   name?: string;

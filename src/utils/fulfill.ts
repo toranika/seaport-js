@@ -23,7 +23,6 @@ import type {
   OrderStatus,
   OrderUseCase,
   ContractMethodReturnType,
-  EncodedData,
 } from "../types";
 import { getApprovalActions } from "./approval";
 import {
@@ -181,7 +180,7 @@ const offerAndConsiderationFulfillmentMapping: {
 
 export async function fulfillBasicOrder({
   order,
-  // seaportContract,
+  seaportContract,
   offererBalancesAndApprovals,
   fulfillerBalancesAndApprovals,
   timeBasedItemParams,
@@ -190,7 +189,8 @@ export async function fulfillBasicOrder({
   signer,
   tips = [],
   conduitKey = NO_CONDUIT,
-  // domain,
+  domain,
+  gasConfig = {}
 }: {
   order: Order;
   seaportContract: Seaport;
@@ -203,12 +203,13 @@ export async function fulfillBasicOrder({
   tips?: ConsiderationItem[];
   conduitKey: string;
   domain?: string;
+  gasConfig: object
 }): Promise<
   OrderUseCase<
     ExchangeAction<
       ContractMethodReturnType<SeaportContract, "fulfillBasicOrder">
     >
-  > | EncodedData
+  >
 > {
   const { offer, consideration } = order.parameters;
   const considerationIncludingTips = [...consideration, ...tips];
@@ -283,35 +284,30 @@ export async function fulfillBasicOrder({
     zoneHash: order.parameters.zoneHash,
   };
 
-  const payableOverrides = { value: totalNativeAmount };
+  const payableOverrides = { value: totalNativeAmount, ...gasConfig };
 
   const approvalActions = await getApprovalActions(
     insufficientApprovals,
     signer
   );
 
+  const exchangeAction = {
+    type: "exchange",
+    transactionMethods: getTransactionMethods(
+      seaportContract.connect(signer),
+      "fulfillBasicOrder",
+      [basicOrderParameters, payableOverrides],
+      domain
+    ),
+  } as const;
+
+  const actions = [...approvalActions, exchangeAction] as const;
+
   return {
-    value:totalNativeAmount,
-    data: basicOrderParameters
-  }
-
-  // const exchangeAction = {
-  //   type: "exchange",
-  //   transactionMethods: getTransactionMethods(
-  //     seaportContract.connect(signer),
-  //     "fulfillBasicOrder",
-  //     [basicOrderParameters, payableOverrides],
-  //     domain
-  //   ),
-  // } as const;
-
-  // const actions = [...approvalActions, exchangeAction] as const;
-
-  // return {
-  //   actions,
-  //   executeAllActions: () =>
-  //     executeAllActions(actions) as Promise<ContractTransaction>,
-  // };
+    actions,
+    executeAllActions: () =>
+      executeAllActions(actions) as Promise<ContractTransaction>,
+  };
 }
 
 export async function fulfillStandardOrder({
@@ -333,6 +329,7 @@ export async function fulfillStandardOrder({
   recipientAddress,
   signer,
   domain,
+  gasConfig = {}
 }: {
   order: Order;
   unitsToFill?: BigNumberish;
@@ -352,6 +349,7 @@ export async function fulfillStandardOrder({
   timeBasedItemParams: TimeBasedItemParams;
   signer: Signer;
   domain?: string;
+  gasConfig: object
 }): Promise<
   OrderUseCase<
     ExchangeAction<
@@ -423,7 +421,7 @@ export async function fulfillStandardOrder({
     fulfillerOperator,
   });
 
-  const payableOverrides = { value: totalNativeAmount };
+  const payableOverrides = { value: totalNativeAmount, ...gasConfig };
 
   const approvalActions = await getApprovalActions(
     insufficientApprovals,

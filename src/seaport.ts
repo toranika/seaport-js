@@ -641,6 +641,7 @@ export class Seaport {
     conduitKey = this.defaultConduitKey,
     recipientAddress = ethers.constants.AddressZero,
     domain = "",
+    gasConfig = {}
   }: {
     order: OrderWithCounter;
     unitsToFill?: BigNumberish;
@@ -652,6 +653,7 @@ export class Seaport {
     conduitKey?: string;
     recipientAddress?: string;
     domain?: string;
+    gasConfig?: object;
   }): Promise<
     OrderUseCase<
       ExchangeAction<
@@ -744,6 +746,7 @@ export class Seaport {
         signer: fulfiller,
         tips: tipConsiderationItems,
         domain,
+        gasConfig
       });
     }
 
@@ -769,6 +772,7 @@ export class Seaport {
       fulfillerOperator,
       recipientAddress,
       domain,
+      gasConfig
     });
   }
 

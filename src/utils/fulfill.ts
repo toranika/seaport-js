@@ -203,7 +203,7 @@ export async function fulfillBasicOrder({
   tips?: ConsiderationItem[];
   conduitKey: string;
   domain?: string;
-  gasConfig: object
+  gasConfig?: object
 }): Promise<
   OrderUseCase<
     ExchangeAction<
@@ -349,7 +349,7 @@ export async function fulfillStandardOrder({
   timeBasedItemParams: TimeBasedItemParams;
   signer: Signer;
   domain?: string;
-  gasConfig: object
+  gasConfig?: object
 }): Promise<
   OrderUseCase<
     ExchangeAction<
